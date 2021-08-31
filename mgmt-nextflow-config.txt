@@ -1,0 +1,15 @@
+nextflow:
+  k8s:
+    runAsUser: 9999
+    namespace: "default" # Namespace where app will be running
+    runNamespace: "default" # Namespace where wes and nf pods will live
+    serviceAccount: "default"
+    volMounts:
+      - "task-pv-claim:/mnt/data"
+    masterUrl: "https://192.168.99.100:8443"
+    trustCertificate: false
+  weblogUrl: "http://192.168.99.1:8083"
+  monitor:
+    sleepInterval: 1000 # milliseconds
+    maxErrorLogLines: 50 # we put the last ${maxErrorLogLines} into the error message if a Pod fails
+

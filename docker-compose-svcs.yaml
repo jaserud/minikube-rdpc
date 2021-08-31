@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  mgmt-scheduler:
+    network_mode: host
+    image: ghcr.io/icgc-argo/workflow-management-scheduler:1.0.0
+    environment:
+      RABBIT_ENDPOINTS_STANDALONE_HOST: localhost
+      RABBIT_ENDPOINTS_STANDALONE_PORT: 5672
+      RABBIT_ENDPOINTS_STANDALONE_USERNAME: user
+      RABBIT_ENDPOINTS_STANDALONE_PASSWORD: pass
+    expose:
+      - "8086"
+    ports:
+      - "8086:8086"
+
+  relay:
+    network_mode: host
+    image: ghcr.io/icgc-argo/workflow-relay:3.0.1
+    environment:
+      SPRING_PROFILES_ACTIVE: weblog, splitter, index
+      ELASTIC_HOSTS: localhost
+      ELASTIC_PORT: 9200
+      ELASTIC_USERNAME: elastic
+      ELASTIC_PASSWORD: testing
+      ELASTIC_USEAUTHENTICATION: "true"
+    expose:
+      - "8083"
+    ports:
+      - 8083:8083
+
+  wf-api:
+    network_mode: host
+    image: ghcr.io/icgc-argo/workflow-api:3.6.1
+    environment:
+      SERVER_PORT: 8081
+      ELASTIC_HOSTS: localhost
+      ELASTIC_PORT: 9200
+      ELASTIC_USERNAME: elastic
+      ELASTIC_PASSWORD: testing
+      ELASTIC_USEAUTHENTICATION: "true"
+    expose:
+      - "8081"
+    ports:
+      - 8081:8081
